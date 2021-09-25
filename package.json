@@ -1,0 +1,68 @@
+{
+	"name": "typescript-starter",
+	"version": "1.0.0",
+	"private": true,
+	"bugs": {
+		"url": "https://github.com/jonahsnider/typescript-starter/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jonahsnider/typescript-starter.git"
+	},
+	"license": "Apache-2.0",
+	"author": {
+		"name": "Jonah Snider",
+		"email": "jonah@jonahsnider.com",
+		"url": "https://jonahsnider.com"
+	},
+	"main": "./tsc_output/index.js",
+	"scripts": {
+		"prebuild": "rm -rf tsc_output",
+		"build": "tsc",
+		"lint": "xo",
+		"style": "prettier --check .",
+		"pretest": "rm -rf coverage .nyc_output",
+		"test": "nyc ava"
+	},
+	"xo": {
+		"prettier": true,
+		"rules": {
+			"prettier/prettier": "off"
+		}
+	},
+	"ava": {
+		"extensions": [
+			"ts"
+		],
+		"files": [
+			"!tsc_output"
+		],
+		"require": [
+			"ts-node/register",
+			"source-map-support/register"
+		]
+	},
+	"nyc": {
+		"all": true,
+		"extends": "@istanbuljs/nyc-config-typescript",
+		"include": [
+			"src/**/*.ts"
+		],
+		"reporter": [
+			"lcov",
+			"cobertura"
+		]
+	},
+	"devDependencies": {
+		"@istanbuljs/nyc-config-typescript": "1.0.1",
+		"ava": "3.15.0",
+		"nyc": "15.1.0",
+		"prettier": "2.3.2",
+		"prettier-config-xo": "2.0.0",
+		"source-map-support": "0.5.20",
+		"ts-node": "10.2.1",
+		"typescript": "4.3.5",
+		"xo": "0.44.0"
+	},
+	"packageManager": "yarn@3.0.2"
+}
