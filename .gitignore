@@ -201,3 +201,5 @@ tsc_output
 .pnp.*
 
 downloads
+
+src/config.json
