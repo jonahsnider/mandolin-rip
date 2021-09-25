@@ -52,7 +52,9 @@ async function thread(uuid: string, token: string) {
 
 	while (true) {
 		// eslint-disable-next-line no-await-in-loop
-		logger.withTag('downloads').info(await mandolin.download());
+		const downloadedFiles = await mandolin.download();
+
+		logger.withTag('downloads').info(downloadedFiles.join(', ') || '(none)');
 
 		// eslint-disable-next-line no-await-in-loop
 		await delay(DELAY);
