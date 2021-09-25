@@ -33,17 +33,3 @@ It reports issues like unused variables or not following best practices to ensur
 ```sh
 yarn run lint
 ```
-
-## Testing
-
-Unit tests are stored alongside source files (ex. `config.ts` would have `config.test.ts`).
-You can run the tests with the `test` script:
-
-```sh
-yarn test
-```
-
-## Coverage
-
-This will generate a `coverage` folder which has a breakdown of coverage of the project.
-The CI will upload the coverage information to [CodeCov](https://codecov.io) which can be [viewed here](https://codecov.io/gh/jonahsnider/typescript-starter).
