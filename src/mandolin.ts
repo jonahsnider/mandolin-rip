@@ -1,12 +1,13 @@
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import {URL} from 'node:url';
 import {Opaque} from 'type-fest';
 import got from 'got';
 import {Parser as M3u8Parser} from 'm3u8-parser';
 import {Nullish, Sort} from '@jonahsnider/util';
-import fs from 'fs';
 
-import {pipeline} from 'stream/promises';
+import {pipeline} from 'node:stream/promises';
+import {BASE_DOWNLOADS_DIR} from './constants';
 
 export interface StreamDetails {
 	id: string;
@@ -19,7 +20,9 @@ export interface StreamDetails {
 type M3u8 = Opaque<string, 'M3u8'>;
 
 export class Mandolin {
-	private readonly mandolinApi = got.extend({
+	public readonly DOWNLOAD_DIR;
+
+	private readonly api = got.extend({
 		prefixUrl: 'https://api.mandolin.com/v1/',
 		headers: {Authorization: this.token},
 		responseType: 'json',
@@ -28,10 +31,8 @@ export class Mandolin {
 	/** Filenames that have been downloaded before. */
 	private readonly downloadedClips = new Set<string>();
 
-	private readonly DOWNLOAD_DIR;
-
 	constructor(private readonly uuid: string, private readonly token: string) {
-		this.DOWNLOAD_DIR = path.join(__dirname, '..', 'downloads', uuid);
+		this.DOWNLOAD_DIR = path.join(BASE_DOWNLOADS_DIR, uuid);
 
 		if (!fs.existsSync(this.DOWNLOAD_DIR)) {
 			fs.mkdirSync(this.DOWNLOAD_DIR, {recursive: true});
@@ -39,7 +40,7 @@ export class Mandolin {
 	}
 
 	public async fetchStreamDetails(): Promise<StreamDetails> {
-		const response = await this.mandolinApi<StreamDetails>(`show/streamDetails/${this.uuid}`);
+		const response = await this.api<StreamDetails>(`show/streamDetails/${this.uuid}`);
 
 		return response.body;
 	}

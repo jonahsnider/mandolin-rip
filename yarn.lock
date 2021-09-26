@@ -1833,7 +1833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"execa@npm:^5.0.0":
+"execa@npm:5.1.1, execa@npm:^5.0.0":
   version: 5.1.1
   resolution: "execa@npm:5.1.1"
   dependencies:
@@ -2878,6 +2878,7 @@ __metadata:
     "@types/node": 16.10.1
     consola: 2.15.3
     delay: 5.0.0
+    execa: 5.1.1
     got: 11.8.2
     m3u8-parser: 4.7.0
     p-retry: 4.6.1

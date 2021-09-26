@@ -21,7 +21,8 @@
 		"build": "tsc",
 		"lint": "xo",
 		"style": "prettier --check .",
-		"start": "node ."
+		"start": "node .",
+		"stitch": "node tsc_output/stitch"
 	},
 	"xo": {
 		"prettier": true,
@@ -43,6 +44,7 @@
 		"@jonahsnider/util": "8.0.1",
 		"consola": "2.15.3",
 		"delay": "5.0.0",
+		"execa": "5.1.1",
 		"got": "11.8.2",
 		"m3u8-parser": "4.7.0",
 		"p-retry": "4.6.1",

@@ -201,5 +201,6 @@ tsc_output
 .pnp.*
 
 downloads
+stitched
 
 src/config.json

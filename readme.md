@@ -14,3 +14,11 @@ mandolin-rip will download `.ts` video files from the Mandolin streaming platfor
 4. `yarn start`
 
 Files will be downloaded into the `downloads` directory, grouped by stream UUID.
+
+After everything has been downloaded you can stitch the clips together using FFmpeg:
+
+```sh
+yarn stitch
+```
+
+This will output an `mp4` file for each stream in the `stitched` directory.
