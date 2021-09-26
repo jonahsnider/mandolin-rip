@@ -1,3 +1,4 @@
+import consola from 'consola';
 import fs from 'node:fs';
 import path from 'node:path';
 import {URL} from 'node:url';
@@ -21,6 +22,8 @@ type M3u8 = Opaque<string, 'M3u8'>;
 
 export class Mandolin {
 	public readonly DOWNLOAD_DIR;
+
+	private readonly logger = consola.withTag(this.uuid);
 
 	private readonly api = got.extend({
 		prefixUrl: 'https://api.mandolin.com/v1/',
@@ -52,8 +55,9 @@ export class Mandolin {
 	}
 
 	/** @returns An array of files downloaded. */
-	public async download(): Promise<string[]> {
-		const snippetM3u8Url = this.pickBestQuality(await this.fetchLivestreamRaw());
+	public async download(m3u8?: M3u8 | Nullish): Promise<string[]> {
+		m3u8 ??= await this.fetchLivestreamRaw();
+		const snippetM3u8Url = this.pickBestQuality(m3u8);
 
 		const {body: snippetM3u8} = await got<M3u8>(snippetM3u8Url.href);
 
@@ -67,7 +71,7 @@ export class Mandolin {
 		}
 
 		const downloads: Array<Promise<void>> = [];
-		const files: string[] = [];
+		const files = new Set<string>();
 
 		for (const segment of parser.manifest.segments) {
 			const fileName = this.filename(new URL(segment.uri));
@@ -80,13 +84,16 @@ export class Mandolin {
 			// Eagerly mark the file as downloaded
 			this.downloadedClips.add(fileName);
 
-			files.push(fileName);
+			files.add(fileName);
 
 			const promise = pipeline(got.stream(segment.uri), fs.createWriteStream(filePath));
 
 			// If an error occurs while downloading, remove the file from the list of downloaded files
-			promise.catch(() => {
+			promise.catch(error => {
 				this.downloadedClips.delete(fileName);
+				files.delete(fileName);
+
+				this.logger.withTag(fileName).error(error);
 			});
 
 			downloads.push(promise);
@@ -94,7 +101,7 @@ export class Mandolin {
 
 		await Promise.all(downloads);
 
-		return files;
+		return [...files];
 	}
 
 	private async fetchLivestreamRaw(streamDetails?: StreamDetails | Nullish): Promise<M3u8> {
