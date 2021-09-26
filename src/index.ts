@@ -1,5 +1,5 @@
 import {URL} from 'node:url';
-import consola from 'consola';
+import consola, {Consola} from 'consola';
 import delay from 'delay';
 import pRetry from 'p-retry';
 import config from './config.json';
@@ -23,11 +23,12 @@ async function main() {
 	for (const uuid of uuids) {
 		const makeThread = async () => {
 			const logger = consola.withTag(uuid).withTag(`thread-${threadIdCounter}`);
+			logger.info('starting thread');
 
 			threadIdCounter++;
 
 			try {
-				await thread(uuid, token);
+				await thread({uuid, token, logger});
 			} catch (error) {
 				logger.error(error);
 			}
@@ -43,9 +44,7 @@ main().catch(error => {
 	process.exit(1);
 });
 
-async function thread(uuid: string, token: string) {
-	const logger = consola.withTag(uuid);
-
+async function thread({uuid, token, logger}: {uuid: string; token: string; logger: Consola}) {
 	const mandolin = new Mandolin(uuid, token);
 
 	const streamDetails = await mandolin.fetchStreamDetails();
