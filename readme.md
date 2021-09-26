@@ -2,7 +2,6 @@
 
 [![Build Status](https://github.com/jonahsnider/mandolin-rip/workflows/CI/badge.svg)](https://github.com/jonahsnidersnider/mandolin-rip/actions)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo)
-[![codecov](https://codecov.io/gh/jonahsnider/mandolin-rip/branch/main/graph/badge.svg)](https://codecov.io/jonahsnidersnider/mandolin-rip)
 
 mandolin-rip will download `.ts` video files from the Mandolin streaming platform as a stream is playing.
 It uses the same source videos that their web app does, giving you the highest quality possible.
