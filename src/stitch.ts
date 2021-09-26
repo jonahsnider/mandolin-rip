@@ -1,8 +1,9 @@
+import process from 'node:process';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import execa from 'execa';
-import {BASE_DOWNLOADS_DIR, BASE_STITCHED_DIR} from './constants';
 import consola from 'consola';
+import {BASE_DOWNLOADS_DIR, BASE_STITCHED_DIR} from './constants';
 
 const INPUT_FILENAME = 'ffmpeg_input.txt';
 const OUTPUT_FILENAME = 'combined.mp4';

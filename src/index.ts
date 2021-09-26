@@ -1,3 +1,4 @@
+import process from 'node:process';
 import {URL} from 'node:url';
 import consola, {Consola} from 'consola';
 import delay from 'delay';
@@ -8,8 +9,6 @@ import {Mandolin} from './mandolin';
 const DELAY = 3 * 1000;
 const THREAD_RETRIES = 10;
 
-let threadIdCounter = 0;
-
 async function main() {
 	const {token} = config;
 
@@ -19,8 +18,10 @@ async function main() {
 
 	const uuids = config.streamUrls.map(streamUrl => new URL(streamUrl).pathname.slice('/watch/'.length));
 	const threads: Array<Promise<void>> = [];
+	let threadIdCounter = 0;
 
 	for (const uuid of uuids) {
+		// eslint-disable-next-line @typescript-eslint/no-loop-func
 		const makeThread = async () => {
 			const logger = consola.withTag(uuid).withTag(`thread-${threadIdCounter}`);
 			logger.info('starting thread');

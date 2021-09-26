@@ -1,13 +1,13 @@
-import consola from 'consola';
 import fs from 'node:fs';
 import path from 'node:path';
 import {URL} from 'node:url';
+import {pipeline} from 'node:stream/promises';
+import consola from 'consola';
 import {Opaque} from 'type-fest';
 import got from 'got';
 import {Parser as M3u8Parser} from 'm3u8-parser';
 import {Nullish, Sort} from '@jonahsnider/util';
 
-import {pipeline} from 'node:stream/promises';
 import {BASE_DOWNLOADS_DIR} from './constants';
 
 export interface StreamDetails {
