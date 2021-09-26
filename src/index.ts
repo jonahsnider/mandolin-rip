@@ -8,6 +8,8 @@ import {Mandolin} from './mandolin';
 const DELAY = 3 * 1000;
 const THREAD_RETRIES = 10;
 
+let threadIdCounter = 0;
+
 async function main() {
 	const {token} = config;
 
@@ -20,14 +22,16 @@ async function main() {
 
 	for (const uuid of uuids) {
 		const makeThread = async () => {
+			const logger = consola.withTag(uuid).withTag(`thread-${threadIdCounter}`);
+
+			threadIdCounter++;
+
 			try {
 				await thread(uuid, token);
 			} catch (error) {
-				consola.withTag(uuid).error(error);
+				logger.error(error);
 			}
 		};
-
-		makeThread();
 
 		threads.push(pRetry(makeThread, {retries: THREAD_RETRIES}));
 	}
