@@ -2,6 +2,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import execa from 'execa';
 import {BASE_DOWNLOADS_DIR, BASE_STITCHED_DIR} from './constants';
+import consola from 'consola';
 
 const INPUT_FILENAME = 'ffmpeg_input.txt';
 const OUTPUT_FILENAME = 'combined.mp4';
@@ -15,16 +16,31 @@ async function main() {
 		const uuid = path.basename(streamDirectory);
 		const outputDir = path.join(BASE_STITCHED_DIR, uuid);
 
+		const logger = consola.withTag(uuid);
+
 		await fs.mkdir(outputDir, {recursive: true});
 
 		const inputPath = path.join(outputDir, INPUT_FILENAME);
 		const outputPath = path.join(outputDir, OUTPUT_FILENAME);
 
-		const files = (await fs.readdir(streamDirectory, {withFileTypes: true}))
-			.filter(child => child.isFile() && child.name.endsWith('.ts'))
-			.map(file => `file '${path.join(streamDirectory, file.name)}'`);
+		const filePaths = new Set(
+			(await fs.readdir(streamDirectory, {withFileTypes: true}))
+				.filter(child => child.isFile() && child.name.endsWith('.ts'))
+				.map(file => path.join(streamDirectory, file.name)),
+		);
 
-		await fs.writeFile(inputPath, files.join('\n'), 'utf-8');
+		for (const file of filePaths) {
+			const stats = await fs.stat(file);
+
+			if (stats.size === 0) {
+				filePaths.delete(file);
+				logger.warn(`${path.basename(file)} is empty`);
+			}
+		}
+
+		const ffmpegInput = [...filePaths].map(file => `file '${file}'`).join('\n');
+
+		await fs.writeFile(inputPath, ffmpegInput, 'utf-8');
 
 		await execa(
 			'ffmpeg',
