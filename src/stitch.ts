@@ -1,6 +1,6 @@
-import process from 'node:process';
-import path from 'node:path';
 import fs from 'node:fs/promises';
+import path from 'node:path';
+import process from 'node:process';
 import execa from 'execa';
 import consola from 'consola';
 import {BASE_DOWNLOADS_DIR, BASE_STITCHED_DIR} from './constants';
@@ -27,7 +27,8 @@ async function main() {
 		const filePaths = new Set(
 			(await fs.readdir(streamDirectory, {withFileTypes: true}))
 				.filter(child => child.isFile() && child.name.endsWith('.ts'))
-				.map(file => path.join(streamDirectory, file.name)),
+				.map(file => path.join(streamDirectory, file.name))
+				.sort((a, b) => a.localeCompare(b, undefined, {numeric: true})),
 		);
 
 		for (const file of filePaths) {
