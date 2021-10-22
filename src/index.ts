@@ -1,10 +1,11 @@
 import process from 'node:process';
 import {URL} from 'node:url';
-import consola, {Consola} from 'consola';
+import type {Consola} from 'consola';
+import consola from 'consola';
 import delay from 'delay';
 import pRetry from 'p-retry';
 import config from './config.json';
-import {Mandolin} from './mandolin';
+import {Mandolin} from './mandolin.js';
 
 const DELAY = 3 * 1000;
 const THREAD_RETRIES = 10;
@@ -54,6 +55,7 @@ async function thread({uuid, token, logger}: {uuid: string; token: string; logge
 		logger.warn('stream is not active');
 	}
 
+	// eslint-disable-next-line no-constant-condition
 	while (true) {
 		// eslint-disable-next-line no-await-in-loop
 		const downloadedFiles = await mandolin.download();

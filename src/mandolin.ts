@@ -3,12 +3,13 @@ import path from 'node:path';
 import {URL} from 'node:url';
 import {pipeline} from 'node:stream/promises';
 import consola from 'consola';
-import {Opaque} from 'type-fest';
+import type {Opaque} from 'type-fest';
 import got from 'got';
 import {Parser as M3u8Parser} from 'm3u8-parser';
-import {Nullish, Sort} from '@jonahsnider/util';
+import type {Nullish} from '@jonahsnider/util';
+import {Sort} from '@jonahsnider/util';
 
-import {BASE_DOWNLOADS_DIR} from './constants';
+import {BASE_DOWNLOADS_DIR} from './constants.js';
 
 export interface StreamDetails {
 	id: string;
@@ -21,12 +22,13 @@ export interface StreamDetails {
 type M3u8 = Opaque<string, 'M3u8'>;
 
 export class Mandolin {
-	public readonly DOWNLOAD_DIR;
+	public readonly downloadDir;
 
 	private readonly logger = consola.withTag(this.uuid);
 
 	private readonly api = got.extend({
 		prefixUrl: 'https://api.mandolin.com/v1/',
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		headers: {Authorization: this.token},
 		responseType: 'json',
 	});
@@ -35,10 +37,10 @@ export class Mandolin {
 	private readonly downloadedClips = new Set<string>();
 
 	constructor(private readonly uuid: string, private readonly token: string) {
-		this.DOWNLOAD_DIR = path.join(BASE_DOWNLOADS_DIR, uuid);
+		this.downloadDir = path.join(BASE_DOWNLOADS_DIR, uuid);
 
-		if (!fs.existsSync(this.DOWNLOAD_DIR)) {
-			fs.mkdirSync(this.DOWNLOAD_DIR, {recursive: true});
+		if (!fs.existsSync(this.downloadDir)) {
+			fs.mkdirSync(this.downloadDir, {recursive: true});
 		}
 	}
 
@@ -75,7 +77,7 @@ export class Mandolin {
 
 		for (const segment of parser.manifest.segments) {
 			const fileName = this.filename(new URL(segment.uri));
-			const filePath = path.join(this.DOWNLOAD_DIR, fileName);
+			const filePath = path.join(this.downloadDir, fileName);
 
 			if (this.downloadedClips.has(fileName)) {
 				continue;

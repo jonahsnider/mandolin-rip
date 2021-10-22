@@ -3,7 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 import execa from 'execa';
 import consola from 'consola';
-import {BASE_DOWNLOADS_DIR, BASE_STITCHED_DIR} from './constants';
+import {BASE_DOWNLOADS_DIR, BASE_STITCHED_DIR} from './constants.js';
 
 const INPUT_FILENAME = 'ffmpeg_input.txt';
 const OUTPUT_FILENAME = 'combined.mp4';
