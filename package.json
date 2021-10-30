@@ -26,7 +26,7 @@
 	},
 	"prettier": "@jonahsnider/prettier-config",
 	"dependencies": {
-		"@jonahsnider/util": "8.2.1",
+		"@jonahsnider/util": "8.4.1",
 		"consola": "2.15.3",
 		"delay": "5.0.0",
 		"execa": "5.1.1",
