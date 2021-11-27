@@ -24,8 +24,9 @@ async function main() {
 		const inputPath = path.join(outputDir, INPUT_FILENAME);
 		const outputPath = path.join(outputDir, OUTPUT_FILENAME);
 
+		const children = await fs.readdir(streamDirectory, {withFileTypes: true});
 		const filePaths = new Set(
-			(await fs.readdir(streamDirectory, {withFileTypes: true}))
+			children
 				.filter(child => child.isFile() && child.name.endsWith('.ts'))
 				.map(file => path.join(streamDirectory, file.name))
 				.sort((a, b) => a.localeCompare(b, undefined, {numeric: true})),
