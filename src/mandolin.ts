@@ -28,7 +28,7 @@ export class Mandolin {
 
 	private readonly api = got.extend({
 		prefixUrl: 'https://api.mandolin.com/v1/',
-		// eslint-disable-next-line @typescript-eslint/naming-convention
+
 		headers: {Authorization: this.token},
 		responseType: 'json',
 	});
